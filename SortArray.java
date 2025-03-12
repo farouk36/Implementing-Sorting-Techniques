@@ -33,22 +33,27 @@ public class SortArray {
     List<List<Integer>> bubbleSort(boolean finalArray) {
 
         List<List<Integer>> result = new ArrayList<>();
+        List<Integer> list = new ArrayList<>(this.list);
         if (!finalArray) {
             result.add(new ArrayList<>(list));
         }
+        boolean flag=false;
 
-        for (int i = 0; i < list.size(); i++) {
-            for (int j = i + 1; j < list.size(); j++) {
-                if (list.get(i) > list.get(j)) {
-                    int temp = list.get(i);
-                    list.set(i, list.get(j));
-                    list.set(j, temp);
+        for (int i = 0; i < list.size()-1; i++) {
+            flag=false;
+            for (int j = 0; j < list.size()-i-1; j++) {
+                if (list.get(j) > list.get(j+1)) {
+                    int temp = list.get(j);
+                    list.set(j, list.get(j+1));
+                    list.set(j+1, temp);
+                    flag=true;
 
                     if (!finalArray) {
                         result.add(new ArrayList<>(list));
                     }
                 }
             }
+            if(!flag)return result;
         }
         if (finalArray) {
             result.add(new ArrayList<>(list));
@@ -72,15 +77,14 @@ public class SortArray {
 
 
 
-    // public static void main(String[] args) {
-    // SortArray sa=new SortArray("");
-    // List<List<Integer>> result=sa.simpleSort(false);
-    // for(List<Integer> l:result){
-    // for(int i:l){
-    // System.out.print(i+" ");
-    // }
-    // System.out.println();
-    // }
-    //
-    // }
+//     public static void main(String[] args) {
+//     SortArray sa=new SortArray("");
+//     List<List<Integer>> result=sa.bubbleSort(false);
+//     for(List<Integer> l:result){
+//     for(int i:l){
+//     System.out.print(i+"   ");
+//     }
+//     System.out.println();
+//     }
+// }
 }
