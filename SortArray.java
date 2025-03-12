@@ -58,12 +58,56 @@ public class SortArray {
         return result;
     }
 
-    List<List<Integer>> EfficientSort(boolean finalArray) {    // O(nlog(n)) merge/quick sort
+    List<List<Integer>> EfficientSort(boolean finalArray) {    // O(nlog(n)) merge sort
         List<List<Integer>> result = new ArrayList<>();
-
+        List<Integer> copiedList = new ArrayList<>(this.list);
+        copiedList = mergeSort(copiedList, result, finalArray);
+        if (result.size() > 1) result.removeLast();
+        if (!finalArray) result.add(new ArrayList<>(copiedList));
         return result;
-    }
+    }// merge sort n*log n
 
+    private List<Integer> mergeSort(List<Integer> arr, List<List<Integer>> result, boolean finalArray){
+        if (arr.size() <= 1){
+            return arr;
+        }
+        int mid = arr.size() / 2;
+        List<Integer> arrLeft = mergeSort(arr.subList(0, mid), result, finalArray);
+        List<Integer> arrRight = mergeSort(arr.subList(mid, arr.size()), result, finalArray);
+        return merge(arrLeft, arrRight, result, finalArray);
+
+    }//log n
+    private List<Integer> merge(List<Integer> arrLeft, List<Integer> arrRight, List<List<Integer>> result, boolean finalArray){
+        List<Integer> arr = new ArrayList<>();
+        if (finalArray){
+            result.add(new ArrayList<>(arrLeft));
+            result.add(new ArrayList<>(arrRight));
+        }
+
+        int i = 0, j = 0;
+        while (i < arrLeft.size() && j < arrRight.size()) {
+            if (arrLeft.get(i) < arrRight.get(j)) {
+                arr.add(arrLeft.get(i));
+                i++;
+            } else {
+                arr.add(arrRight.get(j));
+                j++;
+            }
+        }
+        while (i < arrLeft.size()) {
+            arr.add(arrLeft.get(i));
+            i++;
+        }
+        while (j < arrRight.size()) {
+            arr.add(arrRight.get(j));
+            j++;
+        }
+        if (finalArray){
+            result.add(new ArrayList<>(arr));
+            result.add(null);
+        }
+        return arr;
+    }// n
     private void countSort (List<Integer> arr, int exp){
         int[] count = new int[10];
         int n = arr.size();
@@ -140,14 +184,13 @@ public class SortArray {
     }
 
      public static void main(String[] args) {
-     SortArray sa=new SortArray("/media/braamostafa/Stuff/learning/engineering/year 2/semester 2/DSA/labs/lab 1/code/Implementing-Sorting-Techniques/input.txt");
-     List<List<Integer>> result=sa.NonComparisonSort(true);
-     for(List<Integer> l:result){
-         if(l == null) continue;
-         for(int i:l){
-             System.out.print(i+"   ");
-         }
-         System.out.println();
+     SortArray sa = new SortArray("F:\\Lab DSA 1\\Implementing-Sorting-Techniques\\input.txt");
+     List<List<Integer>> result= sa.EfficientSort(true);
+     for(List<Integer> l : result){
+         if (l != null) {
+             System.out.println(l);
+         }else
+             System.out.println();
      }
  }
 }
