@@ -1,3 +1,5 @@
+package Implementing_Sorting_Techniques;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -23,42 +25,41 @@ public class SortArray {
         }
     }
 
-    SortArray(String filePath) {
+    public SortArray(String filePath) {
         readFile(filePath);
     }
 
-    List<List<Integer>> SimpleSort(boolean finalArray) {   // O(n^2) bubble sort
-
+    public List<List<Integer>> SimpleSort(boolean finalArray) {   // O(n^2) bubble sort
         List<List<Integer>> result = new ArrayList<>();
-        List<Integer> list = new ArrayList<>(this.list);
+        List<Integer> arr = new ArrayList<>(this.list);
         if (!finalArray) {
             result.add(new ArrayList<>(list));
         }
         boolean flag=false;
 
-        for (int i = 0; i < list.size()-1; i++) {
+        for (int i = 0; i < arr.size()-1; i++) {
             flag=false;
-            for (int j = 0; j < list.size()-i-1; j++) {
-                if (list.get(j) > list.get(j+1)) {
-                    int temp = list.get(j);
-                    list.set(j, list.get(j+1));
-                    list.set(j+1, temp);
+            for (int j = 0; j < arr.size()-i-1; j++) {
+                if (arr.get(j) > arr.get(j+1)) {
+                    int temp = arr.get(j);
+                    arr.set(j, arr.get(j+1));
+                    arr.set(j+1, temp);
                     flag=true;
 
-                    if (!finalArray) {
-                        result.add(new ArrayList<>(list));
-                    }
+                    if (!finalArray) result.add(new ArrayList<>(arr));
                 }
             }
-            if(!flag)return result;
+            if(!flag) {
+                if (finalArray) result.add(new ArrayList<>(arr));
+                return result;
+            }
         }
-        if (finalArray) {
-            result.add(new ArrayList<>(list));
-        }
+        if (finalArray) result.add(new ArrayList<>(arr));
+
         return result;
     }
 
-    List<List<Integer>> EfficientSort(boolean finalArray) {    // O(nlog(n)) merge sort
+    public List<List<Integer>> EfficientSort(boolean finalArray) {    // O(nlog(n)) merge sort
         List<List<Integer>> result = new ArrayList<>();
         List<Integer> copiedList = new ArrayList<>(this.list);
         copiedList = mergeSort(copiedList, result, finalArray);
@@ -107,7 +108,9 @@ public class SortArray {
             result.add(null);
         }
         return arr;
-    }// n
+    }
+
+    // helper function for radix sort
     private void countSort (List<Integer> arr, int exp){
         int[] count = new int[10];
         int n = arr.size();
@@ -128,54 +131,72 @@ public class SortArray {
         }
     }
 
-    private void RadixSort (List<Integer> arr, List<List<Integer>> result, boolean finalArray){
+    private void write (List<List<Integer>> result, List<Integer> arr, List<Integer> other, Boolean p){
+        // add the step to the result
+        List<Integer> temp;
+        if(p){
+            temp = new ArrayList<>(arr);
+            for (Integer integer : other) {
+                temp.add(-1 * integer);
+            }
+        }else {
+            temp = new ArrayList<>(other);
+            for (Integer integer : arr) {
+                temp.add(-1 * integer);
+            }
+        }
+        result.add(new ArrayList<>(temp));
+    }
+
+    private void RadixSort (List<Integer> arr, List<List<Integer>> result, boolean finalArray, List<Integer> other, Boolean p){
         int max = -1;
         for(int i = 0; i<arr.size(); i++){
             max = Math.max(max, arr.get(i));
         }
-        if(finalArray) result.add(new ArrayList<>(arr));
         for(int exp = 1; max/exp > 0; exp *= 10){
             countSort(arr, exp);
-            if(finalArray) result.add(new ArrayList<>(arr));
+            if(!finalArray) {
+                write(result, arr, other, p);
+            }
         }
     }
 
-    List<List<Integer>> NonComparisonSort(boolean finalArray) {   // O(n) radix sort
+    public List<List<Integer>> NonComparisonSort(boolean finalArray) {   // O(n) radix sort
         List<List<Integer>> result = new ArrayList<>();
         int n = getSize();
-        if(finalArray){
+        // the first step (initial array)
+        if(!finalArray){
             result.add(new ArrayList<>(list));
             result.add(null);
         }
-        // divide it into negative and positive
+        // the second step (divide positive and negative)
         List<Integer> neg = new ArrayList<>(), pos = new ArrayList<>();
         for(int i = 0; i<n; i++){
             int element = list.get(i);
             if(element < 0)  neg.add(-1*element);
             else pos.add(element);
         }
-
-        // perform the sort for the positive part
-        RadixSort(pos, result, finalArray);
-
-        if(finalArray){
+        if(!finalArray){
+            write(result, pos, neg, true);
             result.add(null);
         }
 
-        // perform the sort for the negative part
-        RadixSort(neg, result, finalArray);
+        // the third step (sorted the positive part)
+        RadixSort(pos, result, finalArray, neg, true);
+        if(!finalArray) result.add(null);
 
-        // merge them
+        // the fourth step (sorted the negative part)
+        RadixSort(neg, result, finalArray, pos, false);
+        if(!finalArray) result.add(null);
+
+        // the final step (merge them)
         List<Integer> finalList = new ArrayList<>();
         for(int i = neg.size()-1; i>=0; i--){
             finalList.add(-1 * neg.get(i));
         }
-        if(finalArray) {
-            result.add(null);
-            result.add(new ArrayList<>(finalList));
-        }
         finalList.addAll(pos);
         result.add(new ArrayList<>(finalList));
+
         return result;
     }
 
@@ -183,14 +204,14 @@ public class SortArray {
         return list.size();
     }
 
-     public static void main(String[] args) {
-     SortArray sa = new SortArray("F:\\Lab DSA 1\\Implementing-Sorting-Techniques\\input.txt");
-     List<List<Integer>> result= sa.EfficientSort(true);
-     for(List<Integer> l : result){
-         if (l != null) {
-             System.out.println(l);
-         }else
-             System.out.println();
-     }
- }
+//     public static void main(String[] args) {
+//        SortArray sa = new SortArray("/media/braamostafa/Stuff/learning/engineering/year 2/semester 2/DSA/labs/lab 1/code/Implementing-Sorting-Techniques/input.txt");
+//        List<List<Integer>> result= sa.SimpleSort(true);
+//        for(List<Integer> l : result){
+//            if (l != null) {
+//                System.out.println(l);
+//            }else
+//                System.out.println("null here");
+//        }
+//     }
 }
