@@ -1,4 +1,4 @@
-package src.test;
+package test;
 
 import Implementing_Sorting_Techniques.SortArray;
 import org.junit.jupiter.api.*;
@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SortArrayTest {
     private String filePath = "test_input.txt";
