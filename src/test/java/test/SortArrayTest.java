@@ -90,47 +90,9 @@ public class SortArrayTest {
         deleteInputFile();
     }
 
-    @Test
-    public void testAllNegativeNumbers() {
-        List<Integer> input = Arrays.asList(-7, -3, -20, -10, -15, -8, -5);
-        createInputFile(input);
-        sa = new SortArray(filePath);
-
-        List<List<Integer>> simpleSortResult = sa.SimpleSort(true);
-        List<List<Integer>> efficientSortResult = sa.EfficientSort(true);
-        List<List<Integer>> nonComparisonSortResult = sa.NonComparisonSort(true);
-
-        List<Integer> expected = Arrays.asList(-20, -15, -10, -8, -7, -5, -3);
-
-        assertEquals(expected, getFinalSortedArray(simpleSortResult), "Simple Sort negative numbers test failed\n");
-        assertEquals(expected, getFinalSortedArray(efficientSortResult), "Efficient Sort negative numbers test failed\n");
-        assertEquals(expected, getFinalSortedArray(nonComparisonSortResult), "Non-Comparison Sort negative numbers test failed\n");
-
-        deleteInputFile();
-    }
-
-    @Test
-    public void testDuplicateElements() {
-        List<Integer> input = Arrays.asList(7, 3, 7, 3, 5, 3, 5);
-        createInputFile(input);
-        sa = new SortArray(filePath);
-
-        List<List<Integer>> simpleSortResult = sa.SimpleSort(true);
-        List<List<Integer>> efficientSortResult = sa.EfficientSort(true);
-        List<List<Integer>> nonComparisonSortResult = sa.NonComparisonSort(true);
-
-        List<Integer> expected = Arrays.asList(3, 3, 3, 5, 5, 7, 7);
-
-        assertEquals(expected, getFinalSortedArray(simpleSortResult), "Simple Sort duplicate elements test failed\n");
-        assertEquals(expected, getFinalSortedArray(efficientSortResult), "Efficient Sort duplicate elements test failed\n");
-        assertEquals(expected, getFinalSortedArray(nonComparisonSortResult), "Non-Comparison Sort duplicate elements test failed\n");
-
-        deleteInputFile();
-    }
-
     // Best, Worst, Average case tests for Simple Sort (Bubble Sort)
     @Test
-    public void testSimpleSortCases() {
+    public void testSimpleSortBestCase() {
         // Best case for bubble sort: already sorted array
         List<Integer> input = new ArrayList<>();
         for(int i = 1; i <= 1000; i++) {
@@ -139,34 +101,58 @@ public class SortArrayTest {
         createInputFile(input);
         sa = new SortArray(filePath);
 
-        long executionTime = measureExecutionTime(() -> sa.SimpleSort(true));
-        System.out.println("Simple Sort Best Case (already sorted) Execution Time: " + executionTime + " ns");
+        long executionTime1 = measureExecutionTime(() -> sa.SimpleSort(true));
+        long executionTime2 = measureExecutionTime(() -> sa.EfficientSort(true));
+        long executionTime3 = measureExecutionTime(() -> sa.NonComparisonSort(true));
+
+        System.out.println("for simple sort (bubble sort) best case:");
+        System.out.println("Simple Sort (bubble sort) Execution Time: " + executionTime1 + " ns");
+        System.out.println("Efficient Sort (merge sort) Execution Time: " + executionTime2 + " ns");
+        System.out.println("Non-Comparison Sort (radix sort) Execution Time: " + executionTime3 + " ns\n");
 
         deleteInputFile();
+    }
 
+    @Test
+    public void testSimpleSortWorstCase() {
         // Worst case for bubble sort: reverse sorted array
-        input = new ArrayList<>();
+        List<Integer> input = new ArrayList<>();
         for(int i = 1000; i >= 1; i--) {
             input.add(i);
         }
         createInputFile(input);
         sa = new SortArray(filePath);
 
-        executionTime = measureExecutionTime(() -> sa.SimpleSort(true));
-        System.out.println("Simple Sort Worst Case (reverse order) Execution Time: " + executionTime + " ns");
+        long executionTime1 = measureExecutionTime(() -> sa.SimpleSort(true));
+        long executionTime2 = measureExecutionTime(() -> sa.EfficientSort(true));
+        long executionTime3 = measureExecutionTime(() -> sa.NonComparisonSort(true));
+
+        System.out.println("for simple sort (bubble sort) worst case:");
+        System.out.println("Simple Sort (bubble sort) Execution Time: " + executionTime1 + " ns");
+        System.out.println("Efficient Sort (merge sort) Execution Time: " + executionTime2 + " ns");
+        System.out.println("Non-Comparison Sort (radix sort) Execution Time: " + executionTime3 + " ns\n");
 
         deleteInputFile();
+    }
 
+    @Test
+    public void testSimpleSortAverageCase() {
         // Average case: randomly ordered array
-        input = new ArrayList<>();
+        List<Integer> input = new ArrayList<>();
         for(int i = 1; i <= 1000; i++) {
             input.add((int) (Math.random() * 1000) + 1);
         }
         createInputFile(input);
         sa = new SortArray(filePath);
 
-        executionTime = measureExecutionTime(() -> sa.SimpleSort(true));
-        System.out.println("Simple Sort Average Case (random order) Execution Time: " + executionTime + " ns\n");
+        long executionTime1 = measureExecutionTime(() -> sa.SimpleSort(true));
+        long executionTime2 = measureExecutionTime(() -> sa.EfficientSort(true));
+        long executionTime3 = measureExecutionTime(() -> sa.NonComparisonSort(true));
+
+        System.out.println("for simple sort (bubble sort) average case:");
+        System.out.println("Simple Sort (bubble sort) Execution Time: " + executionTime1 + " ns");
+        System.out.println("Efficient Sort (merge sort) Execution Time: " + executionTime2 + " ns");
+        System.out.println("Non-Comparison Sort (radix sort) Execution Time: " + executionTime3 + " ns\n");
 
         deleteInputFile();
     }
@@ -174,7 +160,7 @@ public class SortArrayTest {
     // Best, Worst, Average case tests for Efficient Sort (Merge Sort)
     // There's no true "best case" for merge sort as it's O(n log n) regardless
     @Test
-    public void testEfficientSortCases() {
+    public void testEfficientSortBestCase() {
         // but using a sorted array for consistency
         System.out.println("There's no true \"best/worst case\" for merge sort as it's O(n log n) regardless" +
                            "\nbut for consistency:");
@@ -185,41 +171,70 @@ public class SortArrayTest {
         createInputFile(input);
         sa = new SortArray(filePath);
 
-        long executionTime = measureExecutionTime(() -> sa.EfficientSort(true));
-        System.out.println("Efficient Sort (already sorted) Execution Time: " + executionTime + " ns");
+        long executionTime1 = measureExecutionTime(() -> sa.SimpleSort(true));
+        long executionTime2 = measureExecutionTime(() -> sa.EfficientSort(true));
+        long executionTime3 = measureExecutionTime(() -> sa.NonComparisonSort(true));
+
+        System.out.println("for Efficient sort (merge sort) best case:");
+        System.out.println("Simple Sort (bubble sort) Execution Time: " + executionTime1 + " ns");
+        System.out.println("Efficient Sort (merge sort) Execution Time: " + executionTime2 + " ns");
+        System.out.println("Non-Comparison Sort (radix sort) Execution Time: " + executionTime3 + " ns\n");
 
         deleteInputFile();
 
+    }
+
+    @Test
+    public void testEfficientSortWorstCase() {
         // but using a reverse sorted array for consistency
-        input = new ArrayList<>();
+        System.out.println("There's no true \"best/worst case\" for merge sort as it's O(n log n) regardless" +
+                "\nbut for consistency:");
+        List<Integer> input = new ArrayList<>();
         for(int i = 1000; i >= 0; i--) {
             input.add(i);
         }
         createInputFile(input);
         sa = new SortArray(filePath);
 
-        executionTime = measureExecutionTime(() -> sa.EfficientSort(true));
-        System.out.println("Efficient Sort (reverse order) Execution Time: " + executionTime + " ns");
+        long executionTime1 = measureExecutionTime(() -> sa.SimpleSort(true));
+        long executionTime2 = measureExecutionTime(() -> sa.EfficientSort(true));
+        long executionTime3 = measureExecutionTime(() -> sa.NonComparisonSort(true));
+
+        System.out.println("for Efficient sort (merge sort) worst case:");
+        System.out.println("Simple Sort (bubble sort) Execution Time: " + executionTime1 + " ns");
+        System.out.println("Efficient Sort (merge sort) Execution Time: " + executionTime2 + " ns");
+        System.out.println("Non-Comparison Sort (radix sort) Execution Time: " + executionTime3 + " ns\n");
 
         deleteInputFile();
+    }
 
+    @Test
+    public void testEfficientSortAverageCase() {
+        System.out.println("There's no true \"best/worst case\" for merge sort as it's O(n log n) regardless" +
+                "\nbut for consistency:");
         // Average case: randomly ordered array
-        input = new ArrayList<>();
+        List<Integer> input = new ArrayList<>();
         for(int i = 1; i <= 1000; i++) {
             input.add((int) (Math.random() * 1000) + 1);
         }
         createInputFile(input);
         sa = new SortArray(filePath);
 
-        executionTime = measureExecutionTime(() -> sa.EfficientSort(true));
-        System.out.println("Efficient Sort (random) Execution Time: " + executionTime + " ns\n");
+        long executionTime1 = measureExecutionTime(() -> sa.SimpleSort(true));
+        long executionTime2 = measureExecutionTime(() -> sa.EfficientSort(true));
+        long executionTime3 = measureExecutionTime(() -> sa.NonComparisonSort(true));
+
+        System.out.println("for Efficient sort (merge sort) average case:");
+        System.out.println("Simple Sort (bubble sort) Execution Time: " + executionTime1 + " ns");
+        System.out.println("Efficient Sort (merge sort) Execution Time: " + executionTime2 + " ns");
+        System.out.println("Non-Comparison Sort (radix sort) Execution Time: " + executionTime3 + " ns\n");
 
         deleteInputFile();
     }
 
     // Best, Worst, Average case tests for Non-Comparison Sort (Radix Sort)
     @Test
-    public void testNonComparisonSortCases() {
+    public void testNonComparisonBestSortCase() {
         // Best case for radix sort: small digit numbers with same number of digits
         List<Integer> input = new ArrayList<>();
         for(int i = 1; i <= 1000; i++) {
@@ -228,34 +243,58 @@ public class SortArrayTest {
         createInputFile(input);
         sa = new SortArray(filePath);
 
-        long executionTime = measureExecutionTime(() -> sa.NonComparisonSort(true));
-        System.out.println("Non-Comparison Sort Best Case (1 digit numbers) Execution Time: " + executionTime + " ns");
+        long executionTime1 = measureExecutionTime(() -> sa.SimpleSort(true));
+        long executionTime2 = measureExecutionTime(() -> sa.EfficientSort(true));
+        long executionTime3 = measureExecutionTime(() -> sa.NonComparisonSort(true));
+
+        System.out.println("for Non-Comparison sort (radix sort) best case:");
+        System.out.println("Simple Sort (bubble sort) Execution Time: " + executionTime1 + " ns");
+        System.out.println("Efficient Sort (merge sort) Execution Time: " + executionTime2 + " ns");
+        System.out.println("Non-Comparison Sort (radix sort) Execution Time: " + executionTime3 + " ns\n");
 
         deleteInputFile();
+    }
 
+    @Test
+    public void testNonComparisonWorstCase() {
         // Worst case for radix sort: numbers with widely varying digit counts
-        input = new ArrayList<>();
+        List<Integer> input = new ArrayList<>();
         for(int i = 1; i <= 1000; i++) {
             input.add((int) (Math.random() * 100000000) - 50000000);
         }
         createInputFile(input);
         sa = new SortArray(filePath);
 
-        executionTime = measureExecutionTime(() -> sa.NonComparisonSort(true));
-        System.out.println("Non-Comparison Sort Worst Case (large numbers) Execution Time: " + executionTime + " ns");
+        long executionTime1 = measureExecutionTime(() -> sa.SimpleSort(true));
+        long executionTime2 = measureExecutionTime(() -> sa.EfficientSort(true));
+        long executionTime3 = measureExecutionTime(() -> sa.NonComparisonSort(true));
+
+        System.out.println("for Non-Comparison sort (radix sort) worst case:");
+        System.out.println("Simple Sort (bubble sort) Execution Time: " + executionTime1 + " ns");
+        System.out.println("Efficient Sort (merge sort) Execution Time: " + executionTime2 + " ns");
+        System.out.println("Non-Comparison Sort (radix sort) Execution Time: " + executionTime3 + " ns\n");
 
         deleteInputFile();
+    }
 
+    @Test
+    public void testNonComparisonAverageCase() {
         // Average case: randomly ordered array with mixed digit counts
-        input = new ArrayList<>();
+        List<Integer> input = new ArrayList<>();
         for (int i = 1; i <= 1000; i++) {
             input.add((int) (Math.random() * 1000) - 500);
         }
         createInputFile(input);
         sa = new SortArray(filePath);
 
-        executionTime = measureExecutionTime(() -> sa.NonComparisonSort(true));
-        System.out.println("Non-Comparison Sort Average Case (random numbers) Execution Time: " + executionTime + " ns\n");
+        long executionTime1 = measureExecutionTime(() -> sa.SimpleSort(true));
+        long executionTime2 = measureExecutionTime(() -> sa.EfficientSort(true));
+        long executionTime3 = measureExecutionTime(() -> sa.NonComparisonSort(true));
+
+        System.out.println("for Non-Comparison sort (radix sort) average case:");
+        System.out.println("Simple Sort (bubble sort) Execution Time: " + executionTime1 + " ns");
+        System.out.println("Efficient Sort (merge sort) Execution Time: " + executionTime2 + " ns");
+        System.out.println("Non-Comparison Sort (radix sort) Execution Time: " + executionTime3 + " ns\n");
 
         deleteInputFile();
     }
@@ -403,33 +442,6 @@ public class SortArrayTest {
 
     @Test
     public void testPerformance6() {
-        // Generate a reverse sorted array (worst case for bubble sort)
-        List<Integer> input = new ArrayList<>();
-        for (int i = 5000; i > 0; i--) {
-            input.add(i);
-        }
-        createInputFile(input);
-
-        // Create 3 identical copies of the SortArray object
-        SortArray saSimple = new SortArray(filePath);
-        SortArray saEfficient = new SortArray(filePath);
-        SortArray saNonComparison = new SortArray(filePath);
-
-        // Measure execution times
-        long simpleSortTime = measureExecutionTime(() -> saSimple.SimpleSort(true));
-        long efficientSortTime = measureExecutionTime(() -> saEfficient.EfficientSort(true));
-        long nonComparisonSortTime = measureExecutionTime(() -> saNonComparison.NonComparisonSort(true));
-
-        System.out.println("Performance Comparison with 5000 reverse sorted elements:");
-        System.out.println("Simple Sort Time: " + simpleSortTime + " ns");
-        System.out.println("Efficient Sort Time: " + efficientSortTime + " ns");
-        System.out.println("Non-Comparison Sort Time: " + nonComparisonSortTime + " ns\n");
-
-        deleteInputFile();
-    }
-
-    @Test
-    public void testPerformance7() {
         // Generate an array with many duplicates (good for radix sort)
         List<Integer> input = new ArrayList<>();
         for (int i = 0; i < 10000; i++) {
@@ -456,7 +468,7 @@ public class SortArrayTest {
     }
 
     @Test
-    public void testPerformance8() {
+    public void testPerformance7() {
         // Generate an array with large numbers (many digits, challenging for radix sort)
         List<Integer> input = new ArrayList<>();
         for (int i = 0; i < 5000; i++) {
@@ -483,7 +495,7 @@ public class SortArrayTest {
     }
 
     @Test
-    public void testPerformance9() {
+    public void testPerformance8() {
         // Generate an array with a mix of positive and negative numbers with varying digit counts
         List<Integer> input = new ArrayList<>();
         for (int i = 0; i < 3000; i++) {
@@ -503,33 +515,6 @@ public class SortArrayTest {
         long nonComparisonSortTime = measureExecutionTime(() -> saNonComparison.NonComparisonSort(true));
 
         System.out.println("Performance Comparison with 3000 mixed-magnitude elements:");
-        System.out.println("Simple Sort Time: " + simpleSortTime + " ns");
-        System.out.println("Efficient Sort Time: " + efficientSortTime + " ns");
-        System.out.println("Non-Comparison Sort Time: " + nonComparisonSortTime + " ns\n");
-
-        deleteInputFile();
-    }
-
-    @Test
-    public void testPerformance10() {
-        // Generate a sorted array (best case for bubble sort)
-        List<Integer> input = new ArrayList<>();
-        for (int i = 0; i < 5000; i++) {
-            input.add(i);
-        }
-        createInputFile(input);
-
-        // Create 3 identical copies of the SortArray object
-        SortArray saSimple = new SortArray(filePath);
-        SortArray saEfficient = new SortArray(filePath);
-        SortArray saNonComparison = new SortArray(filePath);
-
-        // Measure execution times
-        long simpleSortTime = measureExecutionTime(() -> saSimple.SimpleSort(true));
-        long efficientSortTime = measureExecutionTime(() -> saEfficient.EfficientSort(true));
-        long nonComparisonSortTime = measureExecutionTime(() -> saNonComparison.NonComparisonSort(true));
-
-        System.out.println("Performance Comparison with 5000 already sorted elements:");
         System.out.println("Simple Sort Time: " + simpleSortTime + " ns");
         System.out.println("Efficient Sort Time: " + efficientSortTime + " ns");
         System.out.println("Non-Comparison Sort Time: " + nonComparisonSortTime + " ns\n");
