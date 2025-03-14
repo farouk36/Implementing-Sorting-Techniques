@@ -64,26 +64,40 @@ public class SortArray {
         List<List<Integer>> result = new ArrayList<>();
         List<Integer> copiedList = new ArrayList<>(this.list);
         copiedList = mergeSort(copiedList, result, finalArray);
+
         if (result.size() > 1) result.removeLast();
-        result.add(new ArrayList<>(copiedList));
+        result.add(new ArrayList<>(copiedList)); // Final sorted array
         return result;
     }// merge sort n*log n
 
     private List<Integer> mergeSort(List<Integer> arr, List<List<Integer>> result, boolean finalArray){
-        if (arr.size() <= 1){
+        if (arr.size() <= 1) {
             return arr;
         }
+
         int mid = arr.size() / 2;
-        List<Integer> arrLeft = mergeSort(arr.subList(0, mid), result, finalArray);
-        List<Integer> arrRight = mergeSort(arr.subList(mid, arr.size()), result, finalArray);
+        List<Integer> leftPart = new ArrayList<>(arr.subList(0, mid));
+        List<Integer> rightPart = new ArrayList<>(arr.subList(mid, arr.size()));
+
+        // Logging Splitting Step
+        if (!finalArray) {
+            result.add(new ArrayList<>(leftPart));  // Store left split
+            result.add(new ArrayList<>(rightPart)); // Store right split
+            result.add(null); // Indicating a split step
+        }
+
+        List<Integer> arrLeft = mergeSort(leftPart, result, finalArray);
+        List<Integer> arrRight = mergeSort(rightPart, result, finalArray);
         return merge(arrLeft, arrRight, result, finalArray);
 
     }//log n
     private List<Integer> merge(List<Integer> arrLeft, List<Integer> arrRight, List<List<Integer>> result, boolean finalArray){
         List<Integer> arr = new ArrayList<>();
-        if (finalArray){
-            result.add(new ArrayList<>(arrLeft));
-            result.add(new ArrayList<>(arrRight));
+
+        // Logging Merging Step
+        if (!finalArray) {
+            result.add(new ArrayList<>(arrLeft));  // Store left before merging
+            result.add(new ArrayList<>(arrRight)); // Store right before merging
         }
 
         int i = 0, j = 0;
@@ -104,9 +118,10 @@ public class SortArray {
             arr.add(arrRight.get(j));
             j++;
         }
-        if (finalArray){
-            result.add(new ArrayList<>(arr));
-            result.add(null);
+
+        if (!finalArray) {
+            result.add(new ArrayList<>(arr));  // Store merged result
+            result.add(null); // Indicating a merge step
         }
         return arr;
     }

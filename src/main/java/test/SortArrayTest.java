@@ -1,4 +1,4 @@
-package src.test;
+package test;
 
 import Implementing_Sorting_Techniques.SortArray;
 import org.junit.jupiter.api.*;

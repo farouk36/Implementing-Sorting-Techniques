@@ -164,7 +164,7 @@ public class CommandLineInterface {
 
         System.out.println(PURPLE + "Intermediate steps: " + RESET);
         System.out.println();
-        System.out.println(YELLOW + "intial array: " + RESET + GREEN + result.getFirst() + RESET + "\n");
+        System.out.println(YELLOW + "intial array: " + RESET + GREEN + sortArray.getList() + RESET + "\n");
         System.out.println(YELLOW + "---- SPLIT/MERGE ----" + RESET);
         for (List<Integer> step : result) {
             if (step == null) {
