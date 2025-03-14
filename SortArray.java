@@ -1,4 +1,3 @@
-package Implementing_Sorting_Techniques;
 
 import java.io.FileReader;
 import java.io.IOException;
