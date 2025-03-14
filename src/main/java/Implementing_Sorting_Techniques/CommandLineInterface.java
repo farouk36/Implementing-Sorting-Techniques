@@ -130,6 +130,11 @@ public class CommandLineInterface {
     }
 
     private void displayStepsForRadixSort(List<List<Integer>> result) {
+        if (result.getFirst().size() <= 1){
+            System.out.println(YELLOW + "intial array: " + RESET + GREEN + result.getFirst() + RESET);
+            System.out.println(YELLOW + "\nFinal result: " + RESET + GREEN + result.getLast() + RESET + "\n");
+            return;
+        }
         System.out.println(PURPLE + "Intermediate steps: " + RESET);
         System.out.println();
         System.out.println(YELLOW + "intial array: " + RESET + GREEN + result.getFirst() + RESET);
