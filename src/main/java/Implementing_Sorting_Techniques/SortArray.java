@@ -7,7 +7,7 @@ import java.util.*;
 public class SortArray {
     private List<Integer> list;
 
-    private void readFile(String filePath) {
+    private void readFile(String filePath) throws IOException {
         this.list = new ArrayList<>();
         try {
             FileReader fileReader = new FileReader(filePath);
@@ -21,12 +21,16 @@ public class SortArray {
             }
             in.close();
         } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+            throw new IOException("Error: " + e.getMessage());
         }
     }
 
-    public SortArray(String filePath) {
-        readFile(filePath);
+    public SortArray(String filePath)  {
+        try {
+            readFile(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public List<List<Integer>> SimpleSort(boolean finalArray) {   // O(n^2) bubble sort
