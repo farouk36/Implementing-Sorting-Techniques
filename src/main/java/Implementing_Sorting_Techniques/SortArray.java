@@ -65,7 +65,7 @@ public class SortArray {
         List<Integer> copiedList = new ArrayList<>(this.list);
         copiedList = mergeSort(copiedList, result, finalArray);
         if (result.size() > 1) result.removeLast();
-        if (!finalArray) result.add(new ArrayList<>(copiedList));
+        result.add(new ArrayList<>(copiedList));
         return result;
     }// merge sort n*log n
 
@@ -201,5 +201,14 @@ public class SortArray {
         return list.size();
     }
 
-
+//    public static void main(String[] args) {
+//        SortArray sa = new SortArray("/media/braamostafa/Stuff/learning/engineering/year 2/semester 2/DSA/labs/lab 1/code/Implementing-Sorting-Techniques/input.txt");
+//        List<List<Integer>> result= sa.EfficientSort(false);
+//        for(List<Integer> l : result){
+//            if (l != null) {
+//                System.out.println(l);
+//            }else
+//                System.out.println("null here");
+//        }
+//     }
 }
