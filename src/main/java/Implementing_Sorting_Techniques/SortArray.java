@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.util.*;
 
 public class SortArray {
+    //ANSII color constants
+    private static final String RESET = "\u001B[0m";
+    private static final String RED = "\u001B[31m";
+
     private List<Integer> list;
 
     private void readFile(String filePath) throws IOException {
@@ -21,7 +25,7 @@ public class SortArray {
             }
             in.close();
         } catch (IOException e) {
-            throw new IOException("Error: " + e.getMessage());
+            throw new RuntimeException(RED + "Error reading file: " + RESET + e.getMessage());
         }
     }
 
@@ -29,7 +33,7 @@ public class SortArray {
         try {
             readFile(filePath);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(RED + "Error reading file: " + RESET + e.getMessage());
         }
     }
 
