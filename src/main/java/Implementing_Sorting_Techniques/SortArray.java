@@ -200,6 +200,9 @@ public class SortArray {
     public int getSize() {
         return list.size();
     }
+    public List<Integer> getList() {
+        return list;
+    }
 
 //    public static void main(String[] args) {
 //        SortArray sa = new SortArray("/media/braamostafa/Stuff/learning/engineering/year 2/semester 2/DSA/labs/lab 1/code/Implementing-Sorting-Techniques/input.txt");
