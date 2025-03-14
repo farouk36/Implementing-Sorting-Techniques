@@ -7,10 +7,6 @@ import java.util.*;
 public class SortArray {
     private List<Integer> list;
 
-    public List<Integer> getList() {
-        return list;
-    }
-
     private void readFile(String filePath) {
         this.list = new ArrayList<>();
         try {
@@ -74,29 +70,18 @@ public class SortArray {
     }// merge sort n*log n
 
     private List<Integer> mergeSort(List<Integer> arr, List<List<Integer>> result, boolean finalArray){
-        if (arr.size() <= 1) {
+        if (arr.size() <= 1){
             return arr;
         }
-
         int mid = arr.size() / 2;
-        List<Integer> leftPart = new ArrayList<>(arr.subList(0, mid));
-        List<Integer> rightPart = new ArrayList<>(arr.subList(mid, arr.size()));
-
-        // **Adding Splitting step**
-        if (!finalArray) {
-            result.add(new ArrayList<>(leftPart));
-            result.add(new ArrayList<>(rightPart));
-            result.add(null); // Indicating a split step
-        }
-
-        List<Integer> arrLeft = mergeSort(leftPart, result, finalArray);
-        List<Integer> arrRight = mergeSort(rightPart, result, finalArray);
+        List<Integer> arrLeft = mergeSort(arr.subList(0, mid), result, finalArray);
+        List<Integer> arrRight = mergeSort(arr.subList(mid, arr.size()), result, finalArray);
         return merge(arrLeft, arrRight, result, finalArray);
 
     }//log n
     private List<Integer> merge(List<Integer> arrLeft, List<Integer> arrRight, List<List<Integer>> result, boolean finalArray){
         List<Integer> arr = new ArrayList<>();
-        if (!finalArray) {
+        if (finalArray){
             result.add(new ArrayList<>(arrLeft));
             result.add(new ArrayList<>(arrRight));
         }
@@ -119,9 +104,9 @@ public class SortArray {
             arr.add(arrRight.get(j));
             j++;
         }
-        if (!finalArray) {
-            result.add(new ArrayList<>(arr));  // Show merging step
-            result.add(null);  // Indicating a merge step
+        if (finalArray){
+            result.add(new ArrayList<>(arr));
+            result.add(null);
         }
         return arr;
     }
@@ -215,4 +200,15 @@ public class SortArray {
     public int getSize() {
         return list.size();
     }
+
+//    public static void main(String[] args) {
+//        SortArray sa = new SortArray("/media/braamostafa/Stuff/learning/engineering/year 2/semester 2/DSA/labs/lab 1/code/Implementing-Sorting-Techniques/input.txt");
+//        List<List<Integer>> result= sa.EfficientSort(false);
+//        for(List<Integer> l : result){
+//            if (l != null) {
+//                System.out.println(l);
+//            }else
+//                System.out.println("null here");
+//        }
+//     }
 }
