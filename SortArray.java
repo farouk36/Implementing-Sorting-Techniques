@@ -1,4 +1,3 @@
-package Implementing_Sorting_Techniques;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -111,37 +110,53 @@ public class SortArray {
         return arr;
     }
 
-    // Helper function for radix sort
-    private void countSort(List<Integer> arr, int exp, int start, int end, boolean pos) {
+    // helper function for radix sort
+    private void countSort (List<Integer> arr, int exp){
         int[] count = new int[10];
-        int t;
-        for (int i = start; i < end; i++) {
-            t = pos ? arr.get(i) : -1 * arr.get(i);
-            count[(t / exp) % 10]++;
+        int n = arr.size();
+        for(int a : arr){
+            count[(a/exp)%10]++;
         }
-        for (int i = 1; i < 10; i++) {
-            count[i] += count[i - 1];
+        for(int i = 1; i<10; i++){
+            count[i] += count[i-1];
         }
-        int[] temp = new int[end - start];
-        for (int i = end - 1; i >= start; i--) {
-            int a = pos ? arr.get(i) : -1 * arr.get(i);
-            temp[count[(a / exp) % 10] - 1] = pos ? a : -1 * a;
-            count[(a / exp) % 10]--;
+        int[] temp = new int[n];
+        for(int i = n-1; i>=0; i--){
+            int a = arr.get(i);
+            temp[count[(a/exp)%10]-1] = a;
+            count[(a/exp)%10]--;
         }
-        for (int i = start, j = 0; i < end; i++, j++) {
-            arr.set(i, temp[j]);
+        for(int i = 0; i<n; i++){
+            arr.set(i, temp[i]);
         }
     }
 
-    private void RadixSort(List<Integer> arr, List<List<Integer>> result, boolean finalArray, int start, int end, boolean pos) {
-        int max = -1;
-        for (int i = start; i < end; i++) {
-            max = pos ? Math.max(max, arr.get(i)) : Math.max(max, -1 * arr.get(i));
+    private void write (List<List<Integer>> result, List<Integer> arr, List<Integer> other, Boolean p){
+        // add the step to the result
+        List<Integer> temp;
+        if(p){
+            temp = new ArrayList<>(arr);
+            for (Integer integer : other) {
+                temp.add(-1 * integer);
+            }
+        }else {
+            temp = new ArrayList<>(other);
+            for (Integer integer : arr) {
+                temp.add(-1 * integer);
+            }
         }
-        for (int exp = 1; max / exp > 0; exp *= 10) {
-            countSort(arr, exp, start, end, pos);
-            if (!finalArray) {
-                result.add(new ArrayList<>(arr));
+        result.add(new ArrayList<>(temp));
+    }
+
+    private void RadixSort (List<Integer> arr, List<List<Integer>> result, boolean finalArray, List<Integer> other, Boolean p){
+        int max = -1;
+        for(int i = 0; i<arr.size(); i++){
+            max = Math.max(max, arr.get(i));
+        }
+        for(int exp = 1; max/exp > 0; exp *= 10){
+            countSort(arr, exp);
+            if(!finalArray) {
+                write(result, arr, other, p);
             }
         }
     }
@@ -149,49 +164,37 @@ public class SortArray {
     public List<List<Integer>> NonComparisonSort(boolean finalArray) {   // O(n) radix sort
         List<List<Integer>> result = new ArrayList<>();
         int n = getSize();
-        // The first step (initial array)
-        if (!finalArray) {
+        // the first step (initial array)
+        if(!finalArray){
             result.add(new ArrayList<>(list));
             result.add(null);
         }
-        // The second step (divide positive and negative)
+        // the second step (divide positive and negative)
         List<Integer> neg = new ArrayList<>(), pos = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
+        for(int i = 0; i<n; i++){
             int element = list.get(i);
-            if (element < 0) neg.add(element);
+            if(element < 0)  neg.add(-1*element);
             else pos.add(element);
         }
+        if(!finalArray){
+            write(result, pos, neg, true);
+            result.add(null);
+        }
+
+        // the third step (sorted the positive part)
+        RadixSort(pos, result, finalArray, neg, true);
+        if(!finalArray) result.add(null);
+
+        // the fourth step (sorted the negative part)
+        RadixSort(neg, result, finalArray, pos, false);
+        if(!finalArray) result.add(null);
+
+        // the final step (merge them)
         List<Integer> finalList = new ArrayList<>();
-        finalList.addAll(neg);
+        for(int i = neg.size()-1; i>=0; i--){
+            finalList.add(-1 * neg.get(i));
+        }
         finalList.addAll(pos);
-        if (!finalArray) {
-            result.add(new ArrayList<>(finalList));
-            result.add(null);
-        }
-
-        // The third step (sorted the positive part)
-        int start = neg.size(), end = finalList.size();
-        RadixSort(finalList, result, finalArray, start, end, true);
-        if (!finalArray) result.add(null);
-
-        // The fourth step (sorted the negative part)
-        start = 0;
-        end = neg.size();
-        RadixSort(finalList, result, finalArray, start, end, false);
-
-        // reverse negative part
-        for(int i = 0; i < end/2; i++){
-            int t = finalList.get(i);
-            finalList.set(i, finalList.get(end-1-i));
-            finalList.set(end-1-i, t);
-        }
-        if (!finalArray) {
-            result.add(null);
-            result.add(new ArrayList<>(finalList));
-            result.add(null);
-        }
-
-        // The final step (merge them)
         result.add(new ArrayList<>(finalList));
 
         return result;
