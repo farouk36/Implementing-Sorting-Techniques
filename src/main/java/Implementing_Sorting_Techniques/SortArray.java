@@ -7,6 +7,10 @@ import java.util.*;
 public class SortArray {
     private List<Integer> list;
 
+    public List<Integer> getList() {
+        return list;
+    }
+
     private void readFile(String filePath) {
         this.list = new ArrayList<>();
         try {
@@ -65,23 +69,34 @@ public class SortArray {
         List<Integer> copiedList = new ArrayList<>(this.list);
         copiedList = mergeSort(copiedList, result, finalArray);
         if (result.size() > 1) result.removeLast();
-        if (!finalArray) result.add(new ArrayList<>(copiedList));
+        result.add(new ArrayList<>(copiedList));
         return result;
     }// merge sort n*log n
 
     private List<Integer> mergeSort(List<Integer> arr, List<List<Integer>> result, boolean finalArray){
-        if (arr.size() <= 1){
+        if (arr.size() <= 1) {
             return arr;
         }
+
         int mid = arr.size() / 2;
-        List<Integer> arrLeft = mergeSort(arr.subList(0, mid), result, finalArray);
-        List<Integer> arrRight = mergeSort(arr.subList(mid, arr.size()), result, finalArray);
+        List<Integer> leftPart = new ArrayList<>(arr.subList(0, mid));
+        List<Integer> rightPart = new ArrayList<>(arr.subList(mid, arr.size()));
+
+        // **Adding Splitting step**
+        if (!finalArray) {
+            result.add(new ArrayList<>(leftPart));
+            result.add(new ArrayList<>(rightPart));
+            result.add(null); // Indicating a split step
+        }
+
+        List<Integer> arrLeft = mergeSort(leftPart, result, finalArray);
+        List<Integer> arrRight = mergeSort(rightPart, result, finalArray);
         return merge(arrLeft, arrRight, result, finalArray);
 
     }//log n
     private List<Integer> merge(List<Integer> arrLeft, List<Integer> arrRight, List<List<Integer>> result, boolean finalArray){
         List<Integer> arr = new ArrayList<>();
-        if (finalArray){
+        if (!finalArray) {
             result.add(new ArrayList<>(arrLeft));
             result.add(new ArrayList<>(arrRight));
         }
@@ -104,9 +119,9 @@ public class SortArray {
             arr.add(arrRight.get(j));
             j++;
         }
-        if (finalArray){
-            result.add(new ArrayList<>(arr));
-            result.add(null);
+        if (!finalArray) {
+            result.add(new ArrayList<>(arr));  // Show merging step
+            result.add(null);  // Indicating a merge step
         }
         return arr;
     }
@@ -200,6 +215,4 @@ public class SortArray {
     public int getSize() {
         return list.size();
     }
-
-
 }
