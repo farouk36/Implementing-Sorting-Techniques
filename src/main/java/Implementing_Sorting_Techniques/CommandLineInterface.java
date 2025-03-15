@@ -55,11 +55,11 @@ public class CommandLineInterface {
             if (nextAction == 2) {
                 continueWithCurrentFile = false;
             } else if (nextAction == 3) {
-                return false; // Exit program
+                return false; 
             }
         }
 
-        return true; // Continue program with a different file
+        return true;
     }
 
     private int displaySortingMenu() {
@@ -151,11 +151,7 @@ public class CommandLineInterface {
     }
 
     private void displayStepsForRadixSort(List<List<Integer>> result) {
-//        if (result.getFirst().size() <= 1) {
-//            System.out.println(YELLOW + "Initial array: " + RESET + GREEN + result.getFirst() + RESET);
-//            System.out.println(YELLOW + "\nFinal result: " + RESET + GREEN + result.getLast() + RESET + "\n");
-//            return;
-//        }
+
 
         System.out.println(PURPLE + "Intermediate steps: " + RESET);
         System.out.println();
